@@ -1,12 +1,15 @@
 import express from "express";
 import("./models/DBInstance.js");
 import error_middleware from "./middleware/error_middleware.js";
+import router from "./routes/index.js";
 
 class PayMeServer {
   constructor() {
     this.express = express();
 
-    this.use(error_middleware);
+    this.express.use("/api", router);
+
+    this.express.use(error_middleware);
   }
 
   listen(port) {
