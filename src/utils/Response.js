@@ -3,7 +3,7 @@ export default class Response {
   #status_code;
   #res;
 
-  constructor(message, data, success) {
+  constructor(message, success, data) {
     this.#response = {
       message: this.#format(message),
       data: data || null,
