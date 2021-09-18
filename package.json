@@ -1,0 +1,11 @@
+{
+  "name": "pay-me-api",
+  "version": "1.0.0",
+  "description": "Payment API for pay-me",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chiemekam Anyanwu-Ebere",
+  "license": "ISC"
+}
