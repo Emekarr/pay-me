@@ -47,6 +47,12 @@ const UserSchema = Schema(
   }
 );
 
+UserSchema.virtual("wallet", {
+  ref: "Wallet",
+  foreignField: "owner",
+  localField: "_id",
+});
+
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
