@@ -15,13 +15,16 @@ export default (from, mobile, otp) =>
           console.log("AN ERROR OCCURED WHILE SENDING OTP");
           console.log(`ERROR_MESSAGE: ${err.message} ERROR_NAME: ${err.name}`);
           console.log(err);
+          reject({ success: false });
         } else {
           if (responseData.messages[0]["status"] === "0") {
             console.log("Message sent successfully.");
+            resolve({ success: true });
           } else {
             console.log(
               `Message failed with error ${responseData.messages[0]["error-text"]}`
             );
+            reject({ success: false });
           }
         }
       });

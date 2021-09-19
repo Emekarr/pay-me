@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import CustomError from "../utils/CustomError.js";
 import Response from "../utils/Response.js";
+import generate_otp from "../utils/generate_otp.js";
+import send_otp_mobile from "../utils/send_otp_mobile.js";
 
 const create_user = async (req, res, next) => {
   try {
@@ -21,6 +23,26 @@ const create_user = async (req, res, next) => {
   }
 };
 
+const request_otp = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const user = await User.findById(id);
+    const otp = generate_otp();
+    user.otp = otp;
+    send_otp_mobile("PayMe App", user.mobile, otp)
+      .then(async () => {
+        await user.save();
+        new Response("OTP sent successfully").respond(200, res);
+      })
+      .catch((e) => {
+        new Response("OTP failed to send", false).respond(500, res);
+      });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create_user,
+  request_otp,
 };
