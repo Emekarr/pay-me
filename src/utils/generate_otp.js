@@ -1,1 +1,1 @@
-export default generate_otp = () => Math.floor(100000 + Math.random() * 899999);
+export default () => Math.floor(100000 + Math.random() * 899999);
