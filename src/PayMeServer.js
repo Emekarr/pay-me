@@ -1,4 +1,5 @@
 import express from "express";
+import cookie_parser from "cookie-parser";
 import("./models/DBInstance.js");
 import error_middleware from "./middleware/error_middleware.js";
 import router from "./routes/index.js";
@@ -8,6 +9,7 @@ class PayMeServer {
   constructor() {
     this.express = express();
 
+    this.express.use(cookie_parser());
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: true }));
 

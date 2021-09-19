@@ -42,7 +42,25 @@ const request_otp = async (req, res, next) => {
   }
 };
 
+const verify_otp = async (req, res, next) => {
+  try {
+    const { otp, id } = req.body;
+    const user = await User.findById(id);
+    if (otp !== user.otp) throw new CustomError("Wrong otp provided.", 400);
+    user.otp = null;
+    user.verified_mobile = true;
+    user.expire_at = null;
+    await user.save();
+    const token = await user.generateToken();
+    res.cookie("auth_token", token);
+    new Response("Account verified!", true).respond(200, res);
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create_user,
   request_otp,
+  verify_otp,
 };
