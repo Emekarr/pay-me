@@ -7,6 +7,9 @@ class PayMeServer {
   constructor() {
     this.express = express();
 
+    this.express.use(express.json());
+    this.express.use(express.urlencoded({ extended: true }));
+
     this.express.use("/api", router);
 
     this.express.use(error_middleware);
