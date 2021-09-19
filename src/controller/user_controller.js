@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Wallet from "../models/Wallet.js";
 import CustomError from "../utils/CustomError.js";
 import Response from "../utils/Response.js";
 import generate_otp from "../utils/generate_otp.js";
@@ -54,6 +55,8 @@ const verify_otp = async (req, res, next) => {
     const token = await user.generateToken();
     res.cookie("auth_token", token);
     new Response("Account verified!", true).respond(200, res);
+    const new_wallet = new Wallet({ owner: user._id });
+    await new_wallet.save();
   } catch (e) {
     next(e);
   }
