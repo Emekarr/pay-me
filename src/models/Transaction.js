@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const { Schema, Types, model } = mongoose;
+import CustomError from "../utils/CustomError.js";
 
 const TransactionSchema = Schema(
   {
@@ -19,6 +20,11 @@ const TransactionSchema = Schema(
     action: {
       type: String,
       required: true,
+      validate(data) {
+        if (data !== "CREDIT" || data !== "DEBIT") {
+          throw new CustomError("Action type must be either CREDIT or DEBIT.");
+        }
+      },
     },
     description: {
       type: String,

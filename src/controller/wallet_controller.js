@@ -5,7 +5,7 @@ import Response from "../utils/Response.js";
 import FlutterwaveController from "../flw-controller/Flutterwave_Controller.js";
 const flw = new FlutterwaveController();
 
-const add_card = async (req, res, next) => {
+const charge_card = async (req, res, next) => {
   try {
     const card_details = req.body;
     const tx_ref = new Types.ObjectId();
@@ -17,6 +17,16 @@ const add_card = async (req, res, next) => {
   }
 };
 
+const validate_card = async (req, res, next) => {
+  try {
+    const { otp, flw_ref, save } = req.body;
+    await flw.validateCharge(otp, flw_ref, save);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
-  add_card,
+  charge_card,
+  validate_card,
 };
