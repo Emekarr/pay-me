@@ -7,7 +7,7 @@ export default class Response {
     this.#response = {
       message: this.#format(message),
       data: data || null,
-      success: success == null ? true : false,
+      success: success ? success : false,
     };
   }
 
