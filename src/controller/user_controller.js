@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import Wallet from "../models/Wallet.js";
 import CustomError from "../utils/CustomError.js";
@@ -64,8 +65,34 @@ const verify_otp = async (req, res, next) => {
   }
 };
 
+const login_user = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      throw new CustomError(
+        "Password and Email are both required to Login.",
+        400
+      );
+    const user = await User.findOne({ email });
+    if (!user)
+      throw new CustomError(
+        `There is no account assigned to the email ${email}. Try again.`,
+        400
+      );
+    const legit = await bcrypt.compare(password);
+    if (!legit) throw new CustomError("Incorrect passowrd! Try again.", 400);
+
+    const token = await user.generateToken();
+    res.cookie("auth_token", token);
+    new Response("Login attempt successfull.").respond();
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   create_user,
   request_otp,
   verify_otp,
+  login_user,
 };
