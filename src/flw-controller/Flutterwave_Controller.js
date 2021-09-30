@@ -1,7 +1,7 @@
 import Flutterwave from "flutterwave-node-v3";
 import CustomError from "../utils/CustomError.js";
-import Transaction from "../models/Transaction.js";
-import Wallet from "../models/Wallet.js";
+// import Wallet from "../models/Wallet.js";
+// import Transaction from "../models/Transaction.js";
 
 export default class FlutterwaveController {
   #flw;

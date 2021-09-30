@@ -11,6 +11,7 @@
   "author": "Chiemekam Anyanwu-Ebere",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.7",
     "@vonage/server-sdk": "^2.10.10",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",

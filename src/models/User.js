@@ -14,12 +14,12 @@ const UserSchema = Schema(
       minlength: 2,
       trim: true,
     },
-    mobile: {
+    email: {
       type: String,
-      required: [true, "Please provide a mobile number."],
+      required: [true, "Please provide an email address."],
       unique: [
         true,
-        "This mobile number is already registered to this service.",
+        "This email is already registered to this service.",
       ],
       trim: true,
     },

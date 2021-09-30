@@ -3,18 +3,20 @@ import Wallet from "../models/Wallet.js";
 import CustomError from "../utils/CustomError.js";
 import Response from "../utils/Response.js";
 import generate_otp from "../utils/generate_otp.js";
-import send_otp_mobile from "../utils/send_otp_mobile.js";
+// import send_otp_mobile from "../utils/send_otp_mobile.js";
+import send_otp_mail from "../utils/send_otp_mail.js";
 
 const create_user = async (req, res, next) => {
   try {
     // validate user password passed
     const user_data = req.body;
-    const validate_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    if (!validate_password.test(user_data.password))
-      throw new CustomError(
-        "Password must be at least 8 characters in length, contain 1 uppercase character, 1 lowercase character, and 1 number.",
-        400
-      );
+    // sapa no gree me use sms :D
+    // const validate_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    // if (!validate_password.test(user_data.password))
+    //   throw new CustomError(
+    //     "Password must be at least 8 characters in length, contain 1 uppercase character, 1 lowercase character, and 1 number.",
+    //     400
+    //   );
     const new_user = await User(user_data);
     const user = await new_user.save();
     if (!user) throw new CustomError("Failed to create new user", 400);
@@ -30,7 +32,7 @@ const request_otp = async (req, res, next) => {
     const user = await User.findById(id);
     const otp = generate_otp();
     user.otp = otp;
-    send_otp_mobile("PayMe App", user.mobile, otp)
+    send_otp_mail(user.email, otp)
       .then(async () => {
         await user.save();
         new Response("OTP sent successfully").respond(200, res);
