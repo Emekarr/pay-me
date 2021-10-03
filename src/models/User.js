@@ -80,7 +80,7 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateToken = async function () {
   let token;
   if (!this.lastest_token) {
-    token = sign({ id: this._id, approved_balance: 0 }, process.env.JWT_KEY);
+    token = sign({ id: this._id, approved_balance: 0 }, process.env.JWT_SECRET);
   } else {
     const { approved_balance } = verify(
       this.lastest_token,

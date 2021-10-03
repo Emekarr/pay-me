@@ -6,11 +6,20 @@ const WalletSchema = Schema({
     type: Types.ObjectId,
     required: true,
     unique: true,
+    ref: "User",
   },
   cal_balance: {
     type: Number,
     default: 0,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 WalletSchema.virtual("transactions", {

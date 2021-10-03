@@ -1,4 +1,5 @@
 import CustomError from "../utils/CustomError.js";
+import jwt from "jsonwebtoken";
 
 export default (req, res, next) => {
   try {

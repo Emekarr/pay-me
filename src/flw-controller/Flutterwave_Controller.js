@@ -1,7 +1,5 @@
 import Flutterwave from "flutterwave-node-v3";
 import CustomError from "../utils/CustomError.js";
-// import Wallet from "../models/Wallet.js";
-// import Transaction from "../models/Transaction.js";
 
 export default class FlutterwaveController {
   #flw;
@@ -52,20 +50,24 @@ export default class FlutterwaveController {
   }
 
   // validate the charge request
-  async validateCharge(otp, flw_ref, save) {
+  async validateCharge(otp, flw_ref) {
     const callValidate = await this.#flw.Charge.validate({
       otp,
       flw_ref,
     });
+    return {
+      status: callValidate.status,
+      amount: callValidate.data.amount,
+      payment_type: callValidate.data.payment_type,
+      tx_ref: callValidate.data.tx_ref,
+      id: callValidate.data.id,
+    };
+  }
 
-    //create transaction
-
-    if (save) {
-      const payload = { id: callValidate.data.id };
-      const response = await this.#flw.Transaction.verify(payload);
-      const transaction_token = response.data.card.token;
-
-      // update wallet
-    }
+  async verifyTransaction(id) {
+    const payload = { id };
+    const response = await this.#flw.Transaction.verify(payload);
+    const transaction_token = response.data.card.token;
+    return { transaction_token };
   }
 }

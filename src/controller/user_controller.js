@@ -59,6 +59,8 @@ const verify_otp = async (req, res, next) => {
     res.cookie("auth_token", token);
     new Response("Account verified!", true).respond(200, res);
     const new_wallet = new Wallet({ owner: user._id });
+    console.log(user._id);
+    console.log(new_wallet._id);
     await new_wallet.save();
   } catch (e) {
     next(e);

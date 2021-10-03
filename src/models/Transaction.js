@@ -4,13 +4,19 @@ import CustomError from "../utils/CustomError.js";
 
 const TransactionSchema = Schema(
   {
-    owner: {
-      type: Types._ObjectId,
+    _id: {
+      type: String,
       required: true,
     },
-    credited_wallet: {
-      type: Types._ObjectId,
+    owner: {
+      type: Types.ObjectId,
       required: true,
+      ref: "Wallet",
+    },
+    credited_wallet: {
+      type: Types.ObjectId,
+      required: true,
+      ref: "Wallet",
     },
     transaction_id: {
       type: String,
@@ -21,8 +27,19 @@ const TransactionSchema = Schema(
       type: String,
       required: true,
       validate(data) {
-        if (data !== "CREDIT" || data !== "DEBIT") {
+        if (data !== "CREDIT" && data !== "DEBIT") {
           throw new CustomError("Action type must be either CREDIT or DEBIT.");
+        }
+      },
+    },
+    payment_type: {
+      type: String,
+      required: true,
+      validate(data) {
+        if (data !== "CARD" && data !== "BANK TRANSFER") {
+          throw new CustomError(
+            "Action type must be either CARD or BANK TRANSFER."
+          );
         }
       },
     },
@@ -37,6 +54,7 @@ const TransactionSchema = Schema(
   },
   {
     timestamps: true,
+    _id: false,
   }
 );
 
