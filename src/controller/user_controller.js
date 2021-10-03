@@ -50,6 +50,7 @@ const verify_otp = async (req, res, next) => {
   try {
     const { otp, id } = req.body;
     const user = await User.findById(id);
+    console.log(otp, user.otp);
     if (otp !== user.otp) throw new CustomError("Wrong otp provided.", 400);
     user.otp = null;
     user.verified_mobile = true;
@@ -59,8 +60,6 @@ const verify_otp = async (req, res, next) => {
     res.cookie("auth_token", token);
     new Response("Account verified!", true).respond(200, res);
     const new_wallet = new Wallet({ owner: user._id });
-    console.log(user._id);
-    console.log(new_wallet._id);
     await new_wallet.save();
   } catch (e) {
     next(e);

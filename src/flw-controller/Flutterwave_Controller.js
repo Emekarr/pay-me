@@ -70,4 +70,22 @@ export default class FlutterwaveController {
     const transaction_token = response.data.card.token;
     return { transaction_token };
   }
+
+  async token_charge(amount, narration, token, email, tx_ref) {
+    const payload = {
+      amount,
+      narration,
+      token,
+      currency: "NGN",
+      country: "NG",
+      email,
+      tx_ref,
+    };
+    const response = await this.#flw.Tokenized.charge(payload);
+    return {
+      flw_ref: response.data.flw_ref,
+      status: response.status,
+      payment_type: response.data.payment_type,
+    };
+  }
 }
