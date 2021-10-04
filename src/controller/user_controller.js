@@ -9,15 +9,7 @@ import send_otp_mail from "../utils/send_otp_mail.js";
 
 const create_user = async (req, res, next) => {
   try {
-    // validate user password passed
     const user_data = req.body;
-    // sapa no gree me use sms :D
-    // const validate_password = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    // if (!validate_password.test(user_data.password))
-    //   throw new CustomError(
-    //     "Password must be at least 8 characters in length, contain 1 uppercase character, 1 lowercase character, and 1 number.",
-    //     400
-    //   );
     const new_user = await User(user_data);
     const user = await new_user.save();
     if (!user) throw new CustomError("Failed to create new user", 400);
@@ -50,10 +42,9 @@ const verify_otp = async (req, res, next) => {
   try {
     const { otp, id } = req.body;
     const user = await User.findById(id);
-    console.log(otp, user.otp);
     if (otp !== user.otp) throw new CustomError("Wrong otp provided.", 400);
     user.otp = null;
-    user.verified_mobile = true;
+    user.verified_email = true;
     user.expire_at = null;
     await user.save();
     const token = await user.generateToken();

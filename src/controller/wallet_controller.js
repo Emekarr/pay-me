@@ -3,7 +3,7 @@ const { Types } = mongoose;
 import Wallet from "../models/Wallet.js";
 import User from "../models/User.js";
 import Response from "../utils/Response.js";
-import Transaction from "../models/Transaction.js";
+import CreateTransaction from "../utils/CreateTransaction.js";
 import FlutterwaveController from "../flw-controller/Flutterwave_Controller.js";
 const flw = new FlutterwaveController();
 
@@ -42,17 +42,15 @@ const validate_card = async (req, res, next) => {
       return new Response("Validate failed.", false, null).respond(400, res);
 
     const wallet = await Wallet.findOne({ owner: req.id });
-    const transaction = new Transaction({
-      _id: tx_ref,
-      owner: wallet._id,
-      credited_wallet: wallet._id,
-      action: "CREDIT",
-      transaction_id: flw_ref,
-      description: !description ? "" : description,
+
+    const create_transaction = new CreateTransaction(
+      tx_ref,
+      flw_ref,
+      description,
       amount,
-      payment_type,
-    });
-    await transaction.save();
+      payment_type
+    );
+    await create_transaction.transact(wallet._id, wallet._id, true);
 
     if (save) {
       const { transaction_token } = await flw.verifyTransaction(id);
@@ -84,7 +82,7 @@ const token_charge = async (req, res, next) => {
       user.email,
       tx_ref
     );
-    
+
     if (status !== "success")
       return new Response("Validate failed.", false, null).respond(400, res);
 
@@ -94,17 +92,15 @@ const token_charge = async (req, res, next) => {
       payment_type = "BANK TRANSFER";
     }
 
-    const transaction = new Transaction({
-      _id: tx_ref,
-      owner: wallet._id,
-      credited_wallet: wallet._id,
-      action: "CREDIT",
-      transaction_id: flw_ref,
-      description: !narration ? "" : narration,
+    const create_transaction = new CreateTransaction(
+      tx_ref,
+      flw_ref,
+      narration,
       amount,
-      payment_type,
-    });
-    await transaction.save();
+      payment_type
+    );
+    await create_transaction.transact(wallet._id, wallet._id, true);
+
     new Response("Transaction successfull.", true, null).respond(200, res);
   } catch (error) {
     next(error);

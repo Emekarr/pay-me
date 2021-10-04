@@ -8,10 +8,6 @@ const WalletSchema = Schema({
     unique: true,
     ref: "User",
   },
-  cal_balance: {
-    type: Number,
-    default: 0,
-  },
   tokens: [
     {
       token: {

@@ -35,16 +35,8 @@ const UserSchema = Schema(
         },
       },
     ],
-    account_balance: {
-      type: Number,
-      default: 0,
-    },
-    lastest_token: {
-      type: String,
-      default: null,
-    },
     otp: String,
-    verified_mobile: {
+    verified_email: {
       type: Boolean,
       default: false,
     },

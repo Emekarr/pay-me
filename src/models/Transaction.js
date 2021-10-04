@@ -13,9 +13,14 @@ const TransactionSchema = Schema(
       required: true,
       ref: "Wallet",
     },
-    credited_wallet: {
+    sent_from: {
       type: Types.ObjectId,
-      required: true,
+      default: null,
+      ref: "Wallet",
+    },
+    sent_to: {
+      type: Types.ObjectId,
+      default: null,
       ref: "Wallet",
     },
     transaction_id: {
@@ -51,11 +56,22 @@ const TransactionSchema = Schema(
       type: Number,
       required: true,
     },
+    current_balance: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
     _id: false,
   }
 );
+
+TransactionSchema.pre("save", function (exit) {
+  if (!this.sent_from && !this.sent_to) {
+    throw new CustomError("Set a value for either sent_from or sent_to");
+  }
+  exit();
+});
 
 export default model("Transaction", TransactionSchema);
