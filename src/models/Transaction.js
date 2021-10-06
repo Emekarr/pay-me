@@ -71,6 +71,13 @@ const TransactionSchema = Schema(
   }
 );
 
+TransactionSchema.methods.toJSON = function () {
+  const transaction = this.toObject();
+  delete transaction.__v;
+  delete transaction.updatedAt;
+  return transaction;
+};
+
 TransactionSchema.pre("save", function (exit) {
   if (!this.sent_from && !this.sent_to) {
     throw new CustomError("Set a value for either sent_from or sent_to", 400);
