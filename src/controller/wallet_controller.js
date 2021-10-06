@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const { Types } = mongoose;
 import Wallet from "../models/Wallet.js";
 import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
 import Response from "../utils/Response.js";
 import CreateTransaction from "../utils/CreateTransaction.js";
 import FlutterwaveController from "../flw-controller/Flutterwave_Controller.js";
@@ -138,9 +139,35 @@ const send_cash = async (req, res, next) => {
   }
 };
 
+const wallet_details = async (req, res, next) => {
+  try {
+    const user_wallet = await Wallet.findOne({ owner: req.id });
+    const last_transaction = await Transaction.findOne(
+      { owner: user_wallet.id },
+      {},
+      { sort: { created_at: 1 } }
+    );
+    let account_balance;
+    if (!last_transaction) {
+      account_balance = 0;
+    } else {
+      account_balance = last_transaction.current_balance;
+    }
+    user_wallet.account_balance = account_balance;
+
+    new Response("Transaction successfull.", true, user_wallet).respond(
+      200,
+      res
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   charge_card,
   validate_card,
   token_charge,
   send_cash,
+  wallet_details,
 };
