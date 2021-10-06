@@ -7,6 +7,7 @@ import Response from "../utils/Response.js";
 import CreateTransaction from "../utils/CreateTransaction.js";
 import FlutterwaveController from "../flw-controller/Flutterwave_Controller.js";
 const flw = new FlutterwaveController();
+import PaymentTypes from "../utils/PaymentTypes.js";
 
 const charge_card = async (req, res, next) => {
   try {
@@ -34,9 +35,9 @@ const validate_card = async (req, res, next) => {
     );
 
     if (payment_type === "card") {
-      payment_type = "CARD";
+      payment_type = PaymentTypes.CARD
     } else if (payment_type === "bank transfer") {
-      payment_type = "BANK TRANSFER";
+      payment_type = PaymentTypes.BANK_TRANSFER
     }
 
     if (status !== "success")
@@ -88,9 +89,9 @@ const token_charge = async (req, res, next) => {
       return new Response("Validate failed.", false, null).respond(400, res);
 
     if (payment_type === "card") {
-      payment_type = "CARD";
+      payment_type = PaymentTypes.CARD
     } else if (payment_type === "bank transfer") {
-      payment_type = "BANK TRANSFER";
+      payment_type = PaymentTypes.BANK_TRANSFER
     }
 
     const create_transaction = new CreateTransaction(
@@ -123,7 +124,7 @@ const send_cash = async (req, res, next) => {
       transaction_id,
       description,
       amount,
-      "PAYME TRANSFER"
+      PaymentTypes.PAYME_TRANSFER
     );
     await create_transaction.transact(
       sender_wallet._id,

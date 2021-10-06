@@ -1,5 +1,6 @@
 import Transaction from "../models/Transaction.js";
 import CustomError from "./CustomError.js";
+import TransactionTypes from "./TransactionTypes.js";
 
 export default class CreateTransaction {
   #payload;
@@ -32,7 +33,7 @@ export default class CreateTransaction {
       ...this.#payload,
       owner: sender_id,
       sent_to: reciever_id,
-      action: "DEBIT",
+      action: TransactionTypes.DEBIT,
       current_balance: current_balance - this.#payload.amount,
     };
 
@@ -49,7 +50,7 @@ export default class CreateTransaction {
       ...this.#payload,
       owner: reciever_id,
       sent_from: sender_id,
-      action: "CREDIT",
+      action: TransactionTypes.CREDIT,
       current_balance: current_balance + this.#payload.amount,
     };
 

@@ -1,0 +1,5 @@
+export default {
+  CARD: "CARD",
+  BANK_TRANSFER: "BANK TRANSFER",
+  PAYME_TRANSFER: "PAYME TRANSFER",
+};
