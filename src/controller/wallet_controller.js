@@ -110,19 +110,29 @@ const token_charge = async (req, res, next) => {
 const send_cash = async (req, res, next) => {
   try {
     const { reciever_name, amount, description } = req.body;
-    const tx_ref = new Types.ObjectId();
+    const transaction_id = new Types.ObjectId();
     const sender = await User.findById(req.id);
     const sender_wallet = await Wallet.findOne({ owner: sender._id });
     const reciever = await User.findOne({ username: reciever_name });
     const reciever_wallet = await Wallet.findOne({ owner: reciever._id });
+    const sender_transaction_id = new Types.ObjectId();
+    const reciever_transaction_id = new Types.ObjectId();
     const create_transaction = new CreateTransaction(
-      tx_ref,
       null,
+      transaction_id,
       description,
       amount,
       "PAYME TRANSFER"
     );
-    await create_transaction.transact(sender_wallet._id, reciever_wallet._id);
+    await create_transaction.transact(
+      sender_wallet._id,
+      reciever_wallet._id,
+      false,
+      sender_transaction_id,
+      reciever_transaction_id
+    );
+
+    new Response("Transaction successfull.", true, null).respond(200, res);
   } catch (error) {
     next(error);
   }
