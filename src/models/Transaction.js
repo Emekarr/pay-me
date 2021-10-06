@@ -25,7 +25,7 @@ const TransactionSchema = Schema(
     },
     transaction_id: {
       type: String,
-      required: true,
+      default: null,
       unique: true,
     },
     action: {
@@ -41,7 +41,11 @@ const TransactionSchema = Schema(
       type: String,
       required: true,
       validate(data) {
-        if (data !== "CARD" && data !== "BANK TRANSFER") {
+        if (
+          data !== "CARD" &&
+          data !== "BANK TRANSFER" &&
+          data !== "PAYME TRANSFER"
+        ) {
           throw new CustomError(
             "Action type must be either CARD or BANK TRANSFER."
           );
@@ -69,7 +73,13 @@ const TransactionSchema = Schema(
 
 TransactionSchema.pre("save", function (exit) {
   if (!this.sent_from && !this.sent_to) {
-    throw new CustomError("Set a value for either sent_from or sent_to");
+    throw new CustomError("Set a value for either sent_from or sent_to", 400);
+  }
+  if (this.payment_type !== "PAYME TRANSFER" && !this.transaction_id) {
+    throw new CustomError(
+      "Debit or Credit payments must have a transaction_id.",
+      400
+    );
   }
   exit();
 });
