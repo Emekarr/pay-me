@@ -24,4 +24,11 @@ WalletSchema.virtual("transactions", {
   localField: "_id",
 });
 
+WalletSchema.methods.toJSON = function () {
+  const wallet = this.toObject();
+  delete wallet.tokens;
+  delete wallet.__v;
+  return wallet;
+};
+
 export default model("Wallet", WalletSchema);

@@ -153,7 +153,7 @@ const wallet_details = async (req, res, next) => {
     } else {
       account_balance = last_transaction.current_balance;
     }
-    user_wallet.account_balance = account_balance;
+    user_wallet._doc.account_balance = account_balance;
 
     new Response("Transaction successfull.", true, user_wallet).respond(
       200,
