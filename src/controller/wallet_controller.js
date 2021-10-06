@@ -155,10 +155,30 @@ const wallet_details = async (req, res, next) => {
     }
     user_wallet._doc.account_balance = account_balance;
 
-    new Response("Transaction successfull.", true, user_wallet).respond(
+    new Response("Details retrieved successfully.", true, user_wallet).respond(
       200,
       res
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const get_transactions = async (req, res, next) => {
+  try {
+    let limit = parseInt(req.query.limit);
+    let page = parseInt(req.query.page);
+    const start_from = (page - 1) * limit;
+    const user_wallet = await Wallet.findOne({ owner: req.id });
+    const transactions = await Transaction.find({ owner: user_wallet._id })
+      .limit(limit)
+      .skip(start_from);
+
+    new Response(
+      "Transactions retrieved successfully.",
+      true,
+      transactions
+    ).respond(200, res);
   } catch (error) {
     next(error);
   }
@@ -170,4 +190,5 @@ export default {
   token_charge,
   send_cash,
   wallet_details,
+  get_transactions,
 };
